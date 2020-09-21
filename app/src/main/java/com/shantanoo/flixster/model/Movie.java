@@ -1,5 +1,6 @@
 package com.shantanoo.flixster.model;
 
+import android.text.TextUtils;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -17,6 +18,7 @@ public class Movie {
     private String overview;
     private String posterPath;
     private String backdropPath;
+    private String voteAverage;
 
     public String getTitle() {
         return title;
@@ -27,14 +29,19 @@ public class Movie {
     }
 
     public String getPosterPath() {
-        Log.i("Movie", "PosterPath:" + posterPath);
         String formattedPath = String.format("https://image.tmdb.org/t/p/w342%s", posterPath);
-        Log.i("Movie", "formattedPath PosterPath:" + formattedPath);
         return formattedPath;
     }
 
     public String getBackdropPath() {
+        if(TextUtils.isEmpty(backdropPath) || backdropPath.equals("null")) {
+            return String.format("https://image.tmdb.org/t/p/w342%s", posterPath);
+        }
         return String.format("https://image.tmdb.org/t/p/w342%s", backdropPath);
+    }
+
+    public String getVoteAverage() {
+        return voteAverage;
     }
 
     public Movie(JSONObject jsonObject) throws JSONException {
@@ -42,6 +49,7 @@ public class Movie {
         overview = jsonObject.getString("overview");
         posterPath = jsonObject.getString("poster_path");
         backdropPath = jsonObject.getString("backdrop_path");
+        voteAverage = jsonObject.getString("vote_average");
     }
 
     public static List<Movie> fromJsonArray(JSONArray movieJsonArray) throws JSONException{
