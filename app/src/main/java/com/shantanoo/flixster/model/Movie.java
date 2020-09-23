@@ -1,6 +1,5 @@
 package com.shantanoo.flixster.model;
 
-import android.text.TextUtils;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -11,9 +10,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Shantanoo on 9/19/2020.
+ * Created by Shantanoo on 9/21/2020.
  */
 public class Movie {
+    private static final String TAG = "Movie";
+
+    private static final String POSTER_IMAGE_BASE_PATH = "https://image.tmdb.org/t/p/w342";
+    private static final String BACKDROP_IMAGE_BASE_PATH = "https://image.tmdb.org/t/p/w300";
+
     private String title;
     private String overview;
     private String posterPath;
@@ -29,15 +33,18 @@ public class Movie {
     }
 
     public String getPosterPath() {
-        String formattedPath = String.format("https://image.tmdb.org/t/p/w342%s", posterPath);
+        String formattedPath = String.format(POSTER_IMAGE_BASE_PATH + "%s", posterPath);
+        Log.d(TAG, "getPosterPath:" + formattedPath);
         return formattedPath;
     }
 
     public String getBackdropPath() {
-        if(TextUtils.isEmpty(backdropPath) || backdropPath.equals("null")) {
-            return String.format("https://image.tmdb.org/t/p/w342%s", posterPath);
-        }
-        return String.format("https://image.tmdb.org/t/p/w342%s", backdropPath);
+        /*if(TextUtils.isEmpty(backdropPath) || backdropPath.equals("null")) {
+            return String.format(POSTER_IMAGE_BASE_PATH + "%s", posterPath);
+        }*/
+        String formattedPath = String.format(BACKDROP_IMAGE_BASE_PATH + "%s", backdropPath);
+        Log.d(TAG, "getPosterPath:" + formattedPath);
+        return formattedPath;
     }
 
     public String getVoteAverage() {

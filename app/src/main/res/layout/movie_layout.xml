@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/movie_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingTop="5dp"
-    android:paddingBottom="5dp"
-    android:paddingLeft="5dp"
-    android:paddingRight="5dp">
+    android:paddingTop="8dp"
+    android:paddingBottom="8dp"
+    android:paddingLeft="8dp"
+    android:paddingRight="8dp">
 
     <ImageView
         android:id="@+id/ivMoviePoster"
@@ -27,7 +26,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginStart="5dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="0dp"
         android:layout_marginEnd="0dp"
         android:layout_toEndOf="@+id/ivMoviePoster"
@@ -49,7 +48,3 @@
         android:textSize="14sp"
         tools:text="When the Emperor of China issues a decree that one man per family must serve in the Imperial Chinese Army to defend the country from Huns, Hua Mulan, the eldest daughter of an honored warrior, steps in to take the place of her ailing father. She is spirited, determined and quick on her feet. Disguised as a man by the name of Hua Jun, she is tested every step of the way and must harness her innermost strength and embrace her true potential." />
 </RelativeLayout>
-<!--    android:layout_marginLeft="4dp"-->
-<!--    android:layout_marginTop="4dp"-->
-<!--    android:layout_marginRight="4dp"-->
-<!--    android:layout_marginBottom="4dp"-->

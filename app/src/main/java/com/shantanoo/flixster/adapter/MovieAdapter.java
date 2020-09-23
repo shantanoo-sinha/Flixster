@@ -62,7 +62,7 @@ public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         String voteAverage = movies.get(position).getVoteAverage();
         if(TextUtils.isEmpty(voteAverage))
             return MOVIE;
-        if (Double.parseDouble(voteAverage) >= 7)
+        if (Double.parseDouble(voteAverage) >= 5)
             return POPULAR_MOVIE;
         return MOVIE;
     }
@@ -103,16 +103,19 @@ public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
         public void bind(Movie movie) {
             int radius = 30; // corner radius, higher value = more rounded
-            int margin = 0; // crop margin, set to 0 for corners with no crop
+            int margin = 10; // crop margin, set to 0 for corners with no crop
 
             tvMovieTitle.setText(movie.getTitle());
             tvMovieOverview.setText(movie.getOverview());
             ivMoviePoster.setContentDescription(movie.getTitle());
 
+            int imageWidth = 120;
             String imagePath = "";
             if(context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+                imageWidth = 120;
                 imagePath = movie.getPosterPath();
             } else if (context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                imageWidth = 350;
                 imagePath = movie.getBackdropPath();
             }
             Glide.with(context)
@@ -120,8 +123,10 @@ public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                     .placeholder(R.drawable.image_loading)
                     .error(R.drawable.image_error)
                     .fallback(R.drawable.image_error)
-                    //.transition(withCrossFade())
+                    .transition(withCrossFade(500))
                     .transform(new RoundedCornersTransformation(radius, margin))
+                    //.override(imageWidth, Target.SIZE_ORIGINAL)
+                    //.fitCenter()
                     .into(ivMoviePoster);
         }
     }
@@ -137,15 +142,17 @@ public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
         public void bind(Movie movie) {
             int radius = 30; // corner radius, higher value = more rounded
-            int margin = 0; // crop margin, set to 0 for corners with no crop
+            int margin = 10; // crop margin, set to 0 for corners with no crop
             ivPopularMoviePoster.setContentDescription(movie.getTitle());
             Glide.with(context)
                     .load(movie.getBackdropPath())
                     .placeholder(R.drawable.image_loading)
                     .error(R.drawable.image_error)
                     .fallback(R.drawable.image_error)
-                    //.transition(withCrossFade())
+                    .transition(withCrossFade(500))
                     .transform(new RoundedCornersTransformation(radius, margin))
+                    //.override(350, Target.SIZE_ORIGINAL)
+                    //.fitCenter()
                     .into(ivPopularMoviePoster);
         }
     }
