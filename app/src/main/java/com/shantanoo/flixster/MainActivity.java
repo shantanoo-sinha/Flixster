@@ -32,13 +32,13 @@ public class MainActivity extends AppCompatActivity {
     private static final String PAGE = "&page=";
     private static final String MOVIE_NOW_PLAYING_URL = MOVIE_DB_BASE_URL + ENDPOINT + "?" + MOVIE_DB_API_KEY;
 
-    private int currentPage = 1;
-
     private List<Movie> movies;
     private AsyncHttpClient client;
     private MovieAdapter movieAdapter;
     private LinearLayoutManager linearLayoutManager;
-    private EndlessRecyclerViewScrollListener scrollListener;
+
+    /*private static Parcelable state;
+    private static final String RECYCLER_VIEW_STATE_KEY = "recycler_state";*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,16 +53,16 @@ public class MainActivity extends AppCompatActivity {
         rvMovies.setLayoutManager(linearLayoutManager);
 
         client = new AsyncHttpClient();
+        int currentPage = 1;
         loadNextDataFromApi(currentPage);
 
-        scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
+        EndlessRecyclerViewScrollListener scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 loadNextDataFromApi(++page);
             }
         };
         rvMovies.addOnScrollListener(scrollListener);
-
     }
 
     private void loadNextDataFromApi(int page) {
@@ -90,4 +90,40 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+    /*@Override
+    protected void onPause() {
+        super.onPause();
+
+        recycleViewStateBundle = new Bundle();
+        Parcelable state = rvMovies.getLayoutManager().onSaveInstanceState();
+        recycleViewStateBundle.putParcelable(RECYCLER_VIEW_STATE_KEY, state);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (state != null) {
+            linearLayoutManager.onRestoreInstanceState(state);
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        // Save list state
+        state = linearLayoutManager.onSaveInstanceState();
+        outState.putParcelable(RECYCLER_VIEW_STATE_KEY, state);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        // Retrieve list state and list/item positions
+        if(savedInstanceState != null)
+            state = savedInstanceState.getParcelable(RECYCLER_VIEW_STATE_KEY);
+    }*/
 }

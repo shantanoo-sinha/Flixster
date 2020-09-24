@@ -109,13 +109,13 @@ public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             tvMovieOverview.setText(movie.getOverview());
             ivMoviePoster.setContentDescription(movie.getTitle());
 
-            int imageWidth = 120;
+            //int imageWidth = 120;
             String imagePath = "";
             if(context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-                imageWidth = 120;
+                //imageWidth = 120;
                 imagePath = movie.getPosterPath();
             } else if (context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                imageWidth = 350;
+                //imageWidth = 350;
                 imagePath = movie.getBackdropPath();
             }
             Glide.with(context)
