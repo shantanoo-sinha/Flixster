@@ -5,6 +5,7 @@ import android.util.Log;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.parceler.Parcel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,17 +13,25 @@ import java.util.List;
 /**
  * Created by Shantanoo on 9/21/2020.
  */
+@Parcel
 public class Movie {
     private static final String TAG = "Movie";
 
     private static final String POSTER_IMAGE_BASE_PATH = "https://image.tmdb.org/t/p/w342";
     private static final String BACKDROP_IMAGE_BASE_PATH = "https://image.tmdb.org/t/p/w300";
 
+    private int movieId;
     private String title;
     private String overview;
     private String posterPath;
     private String backdropPath;
-    private String voteAverage;
+    private double voteAverage;
+
+    public Movie() {}
+
+    public int getMovieId() {
+        return movieId;
+    }
 
     public String getTitle() {
         return title;
@@ -47,16 +56,17 @@ public class Movie {
         return formattedPath;
     }
 
-    public String getVoteAverage() {
+    public double getVoteAverage() {
         return voteAverage;
     }
 
     public Movie(JSONObject jsonObject) throws JSONException {
+        movieId = jsonObject.getInt("id");
         title = jsonObject.getString("title");
         overview = jsonObject.getString("overview");
         posterPath = jsonObject.getString("poster_path");
         backdropPath = jsonObject.getString("backdrop_path");
-        voteAverage = jsonObject.getString("vote_average");
+        voteAverage = jsonObject.getDouble("vote_average");
     }
 
     public static List<Movie> fromJsonArray(JSONArray movieJsonArray) throws JSONException{

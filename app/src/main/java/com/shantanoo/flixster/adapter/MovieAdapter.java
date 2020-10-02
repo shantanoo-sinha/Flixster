@@ -1,25 +1,39 @@
 package com.shantanoo.flixster.adapter;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityOptionsCompat;
+import androidx.core.util.Pair;
+import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.shantanoo.flixster.MainActivity;
 import com.shantanoo.flixster.R;
+import com.shantanoo.flixster.activity.MovieOverviewActivity;
 import com.shantanoo.flixster.model.Movie;
+
+import org.parceler.Parcels;
 
 import java.util.List;
 
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
+import static androidx.core.content.ContextCompat.startActivity;
 import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
 
 /**
@@ -59,10 +73,8 @@ public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     @Override
     public int getItemViewType(int position) {
-        String voteAverage = movies.get(position).getVoteAverage();
-        if(TextUtils.isEmpty(voteAverage))
-            return MOVIE;
-        if (Double.parseDouble(voteAverage) >= 5)
+        double voteAverage = movies.get(position).getVoteAverage();
+        if (voteAverage >= 5)
             return POPULAR_MOVIE;
         return MOVIE;
     }
@@ -93,21 +105,39 @@ public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         private ImageView ivMoviePoster;
         private TextView tvMovieTitle;
         private TextView tvMovieOverview;
+        private RelativeLayout rlMovieLayout;
 
         public MovieViewHolder(@NonNull View itemView) {
             super(itemView);
             ivMoviePoster = itemView.findViewById(R.id.ivMoviePoster);
             tvMovieTitle = itemView.findViewById(R.id.tvMovieTitle);
             tvMovieOverview = itemView.findViewById(R.id.tvMovieOverview);
+            rlMovieLayout = itemView.findViewById(R.id.movie_layout);
         }
 
-        public void bind(Movie movie) {
+        public void bind(final Movie movie) {
             int radius = 30; // corner radius, higher value = more rounded
             int margin = 10; // crop margin, set to 0 for corners with no crop
 
             tvMovieTitle.setText(movie.getTitle());
             tvMovieOverview.setText(movie.getOverview());
             ivMoviePoster.setContentDescription(movie.getTitle());
+
+            rlMovieLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(context, "Onclick", Toast.LENGTH_SHORT).show();
+                    Intent i = new Intent(context, MovieOverviewActivity.class);
+                    i.putExtra("movie", Parcels.wrap(movie));
+
+                    Pair<View, String> pair1 = Pair.create((View) tvMovieTitle, "movie_title");
+                    Pair<View, String> pair2 = Pair.create((View) tvMovieOverview, "movie_overview");
+
+                    ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity) context, pair1, pair2);
+                    context.startActivity(i, optionsCompat.toBundle());
+                    //context.startActivity(i);
+                }
+            });
 
             //int imageWidth = 120;
             String imagePath = "";
@@ -134,16 +164,32 @@ public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     public class PopularMovieViewHolder extends RecyclerView.ViewHolder {
 
         private ImageView ivPopularMoviePoster;
+        private ImageView ivMoviePlayOverlay;
+        private RelativeLayout rlPopularMovieLayout;
 
         public PopularMovieViewHolder(@NonNull View itemView) {
             super(itemView);
             ivPopularMoviePoster = itemView.findViewById(R.id.ivPopularMoviePoster);
+            ivMoviePlayOverlay = itemView.findViewById(R.id.ivMoviePlayOverlay);
+            rlPopularMovieLayout = itemView.findViewById(R.id.popular_movie_layout);
         }
 
-        public void bind(Movie movie) {
+        public void bind(final Movie movie) {
             int radius = 30; // corner radius, higher value = more rounded
             int margin = 10; // crop margin, set to 0 for corners with no crop
             ivPopularMoviePoster.setContentDescription(movie.getTitle());
+            //ivMoviePlayOverlay.setVisibility(View.VISIBLE);
+
+            rlPopularMovieLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(context, "Onclick", Toast.LENGTH_SHORT).show();
+                    Intent i = new Intent(context, MovieOverviewActivity.class);
+                    i.putExtra("movie", Parcels.wrap(movie));
+                    context.startActivity(i);
+                }
+            });
+
             Glide.with(context)
                     .load(movie.getBackdropPath())
                     .placeholder(R.drawable.image_loading)
