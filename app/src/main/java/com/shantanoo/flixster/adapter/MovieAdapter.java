@@ -4,25 +4,19 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityOptionsCompat;
 import androidx.core.util.Pair;
-import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.shantanoo.flixster.MainActivity;
 import com.shantanoo.flixster.R;
 import com.shantanoo.flixster.activity.MovieOverviewActivity;
 import com.shantanoo.flixster.model.Movie;
@@ -33,7 +27,6 @@ import java.util.List;
 
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
-import static androidx.core.content.ContextCompat.startActivity;
 import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
 
 /**
@@ -41,10 +34,9 @@ import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOption
  */
 public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
+    private final int MOVIE = 0, POPULAR_MOVIE = 1;
     private Context context;
     private List<Movie> movies;
-
-    private final int MOVIE = 0, POPULAR_MOVIE = 1;
 
     public MovieAdapter(Context context, List<Movie> movies) {
         this.context = context;
@@ -126,14 +118,15 @@ public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             rlMovieLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(context, "Onclick", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(context, "Onclick", Toast.LENGTH_SHORT).show();
                     Intent i = new Intent(context, MovieOverviewActivity.class);
-                    i.putExtra("movie", Parcels.wrap(movie));
+                    i.putExtra(context.getString(R.string.movie), Parcels.wrap(movie));
 
-                    Pair<View, String> pair1 = Pair.create((View) tvMovieTitle, "movie_title");
-                    Pair<View, String> pair2 = Pair.create((View) tvMovieOverview, "movie_overview");
+                    Pair<View, String> pair1 = Pair.create((View) tvMovieTitle, context.getString(R.string.movie_title));
+                    Pair<View, String> pair2 = Pair.create((View) tvMovieOverview, context.getString(R.string.movie_overview));
+                    Pair<View, String> pair3 = Pair.create((View) ivMoviePoster, context.getString(R.string.movie_poster));
 
-                    ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity) context, pair1, pair2);
+                    ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity) context, pair1, pair2, pair3);
                     context.startActivity(i, optionsCompat.toBundle());
                     //context.startActivity(i);
                 }
@@ -141,7 +134,7 @@ public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
             //int imageWidth = 120;
             String imagePath = "";
-            if(context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            if (context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
                 //imageWidth = 120;
                 imagePath = movie.getPosterPath();
             } else if (context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
@@ -183,10 +176,15 @@ public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             rlPopularMovieLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(context, "Onclick", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(context, "Onclick", Toast.LENGTH_SHORT).show();
                     Intent i = new Intent(context, MovieOverviewActivity.class);
-                    i.putExtra("movie", Parcels.wrap(movie));
-                    context.startActivity(i);
+                    i.putExtra(context.getString(R.string.movie), Parcels.wrap(movie));
+
+                    Pair<View, String> pair1 = Pair.create((View) ivPopularMoviePoster, context.getString(R.string.movie_poster));
+
+                    ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity) context, pair1);
+                    context.startActivity(i, optionsCompat.toBundle());
+                    //context.startActivity(i);
                 }
             });
 

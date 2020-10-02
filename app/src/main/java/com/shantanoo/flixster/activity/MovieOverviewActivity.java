@@ -1,15 +1,11 @@
 package com.shantanoo.flixster.activity;
 
-import android.app.Activity;
 import android.os.Bundle;
-import android.transition.TransitionInflater;
+import android.text.TextUtils;
 import android.util.Log;
-import android.view.MenuItem;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import androidx.annotation.NonNull;
 
 import com.codepath.asynchttpclient.AsyncHttpClient;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
@@ -22,6 +18,7 @@ import com.shantanoo.flixster.model.Movie;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 import org.parceler.Parcels;
 
 import okhttp3.Headers;
@@ -35,6 +32,8 @@ public class MovieOverviewActivity extends YouTubeBaseActivity {
 
     private TextView tvMovieTitle;
     private TextView tvMovieOverview;
+    private TextView tvMoviePopularity;
+    private TextView tvMovieReleaseDate;
     private RatingBar ratingBar;
     private YouTubePlayerView youTubePlayerView;
 
@@ -47,16 +46,20 @@ public class MovieOverviewActivity extends YouTubeBaseActivity {
 
         tvMovieTitle = findViewById(R.id.tvMovieTitle);
         tvMovieOverview = findViewById(R.id.tvMovieOverview);
+        tvMoviePopularity = findViewById(R.id.tvMoviePopularity);
+        tvMovieReleaseDate = findViewById(R.id.tvMovieReleaseDate);
         ratingBar = findViewById(R.id.ratingBar);
         youTubePlayerView = findViewById(R.id.player);
 
-        Movie movie = (Movie) Parcels.unwrap(getIntent().getParcelableExtra("movie"));
+        Movie movie = (Movie) Parcels.unwrap(getIntent().getParcelableExtra(getString(R.string.movie)));
         tvMovieTitle.setText(movie.getTitle());
         tvMovieOverview.setText(movie.getOverview());
+        tvMoviePopularity.setText(movie.getPopularity());
+        tvMovieReleaseDate.setText(movie.getReleaseDate());
 
         final float voteAverage = (float) movie.getVoteAverage();
         ratingBar.setRating(voteAverage);
-        if(voteAverage >= 5)
+        if (voteAverage >= 5)
             isPopular = true;
 
         AsyncHttpClient client = new AsyncHttpClient();
@@ -68,7 +71,19 @@ public class MovieOverviewActivity extends YouTubeBaseActivity {
                     if (results.length() == 0)
                         return;
 
-                    String youtubeKey = results.getJSONObject(0).getString("key");
+                    String youtubeKey = "";
+                    for (int i = 0; i < results.length(); i++) {
+                        JSONObject jsonObject = results.getJSONObject(i);
+                        String site = jsonObject.getString(getString(R.string.site));
+                        if (getString(R.string.youtube).equalsIgnoreCase(site)) {
+                            youtubeKey = jsonObject.getString(getString(R.string.key));
+                            break;
+                        }
+                    }
+
+                    if (TextUtils.isEmpty(youtubeKey))
+                        return;
+
                     Log.d(TAG, "onSuccess: YouTube Key: " + youtubeKey);
                     initializeYoutube(youtubeKey);
                 } catch (JSONException e) {

@@ -26,8 +26,29 @@ public class Movie {
     private String posterPath;
     private String backdropPath;
     private double voteAverage;
+    private String popularity;
+    private String releaseDate;
 
-    public Movie() {}
+    public Movie() {
+    }
+
+    public Movie(JSONObject jsonObject) throws JSONException {
+        movieId = jsonObject.getInt("id");
+        title = jsonObject.getString("title");
+        overview = jsonObject.getString("overview");
+        posterPath = jsonObject.getString("poster_path");
+        backdropPath = jsonObject.getString("backdrop_path");
+        voteAverage = jsonObject.getDouble("vote_average");
+        popularity = jsonObject.getString("popularity");
+        releaseDate = jsonObject.getString("release_date");
+    }
+
+    public static List<Movie> fromJsonArray(JSONArray movieJsonArray) throws JSONException {
+        List<Movie> movies = new ArrayList<>();
+        for (int i = 0; i < movieJsonArray.length(); i++)
+            movies.add(new Movie(movieJsonArray.getJSONObject(i)));
+        return movies;
+    }
 
     public int getMovieId() {
         return movieId;
@@ -60,19 +81,11 @@ public class Movie {
         return voteAverage;
     }
 
-    public Movie(JSONObject jsonObject) throws JSONException {
-        movieId = jsonObject.getInt("id");
-        title = jsonObject.getString("title");
-        overview = jsonObject.getString("overview");
-        posterPath = jsonObject.getString("poster_path");
-        backdropPath = jsonObject.getString("backdrop_path");
-        voteAverage = jsonObject.getDouble("vote_average");
+    public String getPopularity() {
+        return popularity;
     }
 
-    public static List<Movie> fromJsonArray(JSONArray movieJsonArray) throws JSONException{
-        List<Movie> movies = new ArrayList<>();
-        for (int i = 0; i < movieJsonArray.length(); i++)
-            movies.add(new Movie(movieJsonArray.getJSONObject(i)));
-        return movies;
+    public String getReleaseDate() {
+        return releaseDate;
     }
 }

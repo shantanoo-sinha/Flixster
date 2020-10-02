@@ -20,6 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:contentDescription="@string/movie_image"
+            android:transitionName="@string/movie_poster"
             tools:srcCompat="@tools:sample/avatars" />
 
         <ImageView
